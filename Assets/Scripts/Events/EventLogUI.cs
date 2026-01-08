@@ -17,6 +17,7 @@ namespace MKGame.Events
             _eventState = root.WorldState.Events;
             root.EventBus.Subscribe<MoveEvent>(OnMove);
             root.EventBus.Subscribe<ResourcePickedEvent>(OnResourcePicked);
+            root.EventBus.Subscribe<QuestCompletedEvent>(OnQuestCompleted);
         }
 
         private void OnGUI()
@@ -27,18 +28,20 @@ namespace MKGame.Events
                 _eventState = rootState.Events;
             }
 
-            var y = 10;
-            GUI.Label(new Rect(10, y, 300, 20), "Event Log");
-            y += 22;
+            var panel = new Rect(10, 10, 320, 210);
+            GUI.Box(panel, string.Empty, MKGame.Rendering.UiStyles.Panel);
+            var y = panel.y + 8;
+            GUI.Label(new Rect(panel.x + 8, y, 300, 20), "Event Log", MKGame.Rendering.UiStyles.Title);
+            y += 24;
             for (var i = 0; i < _entries.Count; i++)
             {
-                GUI.Label(new Rect(10, y, 600, 20), _entries[i]);
-                y += 18;
+                GUI.Label(new Rect(panel.x + 8, y, 300, 18), _entries[i], MKGame.Rendering.UiStyles.Label);
+                y += 16;
             }
 
             if (_eventState != null)
             {
-                GUI.Label(new Rect(10, y + 6, 300, 20), "Queue: " + _eventState.EventQueue.Count);
+                GUI.Label(new Rect(panel.x + 8, panel.y + panel.height - 22, 300, 18), "Queue: " + _eventState.EventQueue.Count, MKGame.Rendering.UiStyles.Label);
             }
         }
 
@@ -50,6 +53,11 @@ namespace MKGame.Events
         private void OnResourcePicked(ResourcePickedEvent evt)
         {
             Push($"Pickup: {evt.Actor.Value} got {evt.Amount} at ({evt.X},{evt.Y})");
+        }
+
+        private void OnQuestCompleted(QuestCompletedEvent evt)
+        {
+            Push($"Quest: {evt.Title} completed");
         }
 
         private void Push(string msg)

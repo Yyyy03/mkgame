@@ -10,6 +10,7 @@ namespace MKGame.Save
         public EntityStateDto Entities;
         public SimulationStateDto Simulation;
         public EventStateDto Events;
+        public TaskStateDto Tasks;
         public RngStateBundle Rng;
         public long Tick;
     }
@@ -68,5 +69,21 @@ namespace MKGame.Save
         public int Amount;
         public int X;
         public int Y;
+    }
+
+    public sealed class TaskStateDto
+    {
+        public QuestDto[] Quests;
+    }
+
+    public struct QuestDto
+    {
+        public string Id;
+        public string Title;
+        public string Description;
+        public int Type;
+        public int Target;
+        public int Progress;
+        public bool Completed;
     }
 }

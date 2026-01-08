@@ -44,11 +44,13 @@ namespace MKGame.Core.Time
                 _accumulator -= logicDelta;
                 CurrentTick++;
                 RunDomain(_logicTickables, CurrentTick, logicDelta);
-                if (CurrentTick % (LogicHz / AiHz) == 0)
+                var aiStep = Math.Max(1, LogicHz / AiHz);
+                if (CurrentTick % aiStep == 0)
                 {
                     RunDomain(_aiTickables, CurrentTick, logicDelta);
                 }
-                if (CurrentTick % (LogicHz / SimulationHz) == 0)
+                var simStep = Math.Max(1, LogicHz / SimulationHz);
+                if (CurrentTick % simStep == 0)
                 {
                     RunDomain(_simTickables, CurrentTick, logicDelta);
                 }

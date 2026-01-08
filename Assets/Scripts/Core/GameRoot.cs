@@ -7,6 +7,7 @@ using MKGame.Events;
 using MKGame.Commands;
 using MKGame.AI.Decision;
 using MKGame.Simulation;
+using MKGame.Tasks;
 
 namespace MKGame.Core
 {
@@ -24,6 +25,7 @@ namespace MKGame.Core
         public TickScheduler TickScheduler { get; private set; }
         public AiSystem AiSystem { get; private set; }
         public SimulationSystem SimulationSystem { get; private set; }
+        public QuestSystem QuestSystem { get; private set; }
 
         private void Awake()
         {
@@ -44,9 +46,12 @@ namespace MKGame.Core
             TickScheduler = new TickScheduler();
             AiSystem = new AiSystem();
             SimulationSystem = new SimulationSystem();
+            QuestSystem = new QuestSystem();
 
             AiSystem.Initialize(WorldState, CommandQueue, RngProvider.Ai);
             SimulationSystem.Initialize(WorldState);
+            QuestSystem.Initialize(WorldState, EventBus);
+            QuestSystem.EnsureDefaultQuests();
             TickScheduler.Register(AiSystem);
             TickScheduler.Register(SimulationSystem);
         }

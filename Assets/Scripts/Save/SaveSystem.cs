@@ -116,12 +116,33 @@ namespace MKGame.Save
                 eventsDto.Queue.Add(ToEventDto(evt));
             }
 
+            var tasksDto = new TaskStateDto
+            {
+                Quests = new QuestDto[state.Tasks.Quests.Count]
+            };
+
+            for (var i = 0; i < state.Tasks.Quests.Count; i++)
+            {
+                var q = state.Tasks.Quests[i];
+                tasksDto.Quests[i] = new QuestDto
+                {
+                    Id = q.Id,
+                    Title = q.Title,
+                    Description = q.Description,
+                    Type = (int)q.Type,
+                    Target = q.Target,
+                    Progress = q.Progress,
+                    Completed = q.Completed
+                };
+            }
+
             return new WorldStateDto
             {
                 Map = map,
                 Entities = entities,
                 Simulation = simulation,
                 Events = eventsDto,
+                Tasks = tasksDto,
                 Rng = state.Rng,
                 Tick = state.Tick
             };
@@ -208,6 +229,24 @@ namespace MKGame.Save
                     {
                         state.Events.EventQueue.Enqueue(evt);
                     }
+                }
+            }
+
+            if (dto.Tasks != null && dto.Tasks.Quests != null)
+            {
+                for (var i = 0; i < dto.Tasks.Quests.Length; i++)
+                {
+                    var q = dto.Tasks.Quests[i];
+                    state.Tasks.Quests.Add(new QuestState
+                    {
+                        Id = q.Id,
+                        Title = q.Title,
+                        Description = q.Description,
+                        Type = (QuestType)q.Type,
+                        Target = q.Target,
+                        Progress = q.Progress,
+                        Completed = q.Completed
+                    });
                 }
             }
 

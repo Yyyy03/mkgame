@@ -23,8 +23,12 @@ namespace MKGame.Rendering
             var eventCount = state.Events.EventQueue.Count;
             var tick = state.Tick;
 
-            var label = $"Tick: {tick} | Entities: {entityCount} | Events: {eventCount}";
-            GUI.Label(new Rect(10, Screen.height - 30, 600, 25), label);
+            var time = state.Simulation.TimeOfDay;
+            var timeLabel = $"Time: {time:00.0}h";
+            var label = $"Tick: {tick} | Entities: {entityCount} | Events: {eventCount} | {timeLabel}";
+            var rect = new Rect(10, Screen.height - 40, 620, 30);
+            GUI.Box(rect, string.Empty, UiStyles.Panel);
+            GUI.Label(new Rect(rect.x + 8, rect.y + 6, rect.width - 16, rect.height), label, UiStyles.Label);
         }
     }
 }

@@ -26,13 +26,15 @@ namespace MKGame.Save
                 return;
             }
 
-            const int width = 220;
-            const int height = 30;
+            const int width = 200;
+            const int height = 28;
             const int padding = 10;
-            var rectSave = new Rect(padding, padding, width, height);
-            var rectLoad = new Rect(padding, padding + height + 6, width, height);
-            var rectLabel = new Rect(padding, padding + (height + 6) * 2, 500, height);
+            var panel = new Rect(padding, padding + 240, width + 20, height * 3 + 18);
+            var rectSave = new Rect(panel.x + 10, panel.y + 10, width, height);
+            var rectLoad = new Rect(panel.x + 10, panel.y + 10 + height + 6, width, height);
+            var rectLabel = new Rect(panel.x + 10, panel.y + 10 + (height + 6) * 2, 300, height);
 
+            GUI.Box(panel, string.Empty, MKGame.Rendering.UiStyles.Panel);
             if (GUI.Button(rectSave, "Save to File"))
             {
                 _lastPath = _saveDriver.SaveToFile(FileName);
@@ -47,7 +49,7 @@ namespace MKGame.Save
 
             if (!string.IsNullOrEmpty(_status))
             {
-                GUI.Label(rectLabel, _status);
+                GUI.Label(rectLabel, _status, MKGame.Rendering.UiStyles.Label);
             }
         }
     }

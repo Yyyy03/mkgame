@@ -16,6 +16,8 @@ namespace MKGame.Rendering
         public Sprite NpcSprite;
         [Header("Resource Sprites (optional)")]
         public Sprite ResourceSprite;
+        [Header("Scene Effects")]
+        public bool EnableDayNightTint = true;
 
         private WorldDiff _diff;
         private WorldState _state;
@@ -48,6 +50,7 @@ namespace MKGame.Rendering
             {
                 ApplyTileDiffs();
                 ApplyEntityDiffs();
+                ApplyDayNightTint();
             }
 
             // Consume diffs here and then clear exactly once.
@@ -181,6 +184,19 @@ namespace MKGame.Rendering
             sr.sprite = isPlayer ? PlayerSprite : NpcSprite;
             sr.color = Color.white;
             go.transform.position = new Vector3(data.Position.x, data.Position.y, -1f);
+        }
+
+        private void ApplyDayNightTint()
+        {
+            if (!EnableDayNightTint || _tilemap == null)
+            {
+                return;
+            }
+
+            var t = _state.Simulation.TimeOfDay;
+            var isNight = t >= 18f || t < 6f;
+            var tint = isNight ? new Color(0.6f, 0.7f, 0.9f) : Color.white;
+            _tilemap.color = tint;
         }
 
         private void OnResourcePicked(MKGame.Events.ResourcePickedEvent evt)

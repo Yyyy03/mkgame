@@ -8,7 +8,8 @@ namespace MKGame.Events
         private static readonly Dictionary<string, Type> _types = new Dictionary<string, Type>
         {
             { nameof(MoveEvent), typeof(MoveEvent) },
-            { nameof(ResourcePickedEvent), typeof(ResourcePickedEvent) }
+            { nameof(ResourcePickedEvent), typeof(ResourcePickedEvent) },
+            { nameof(QuestCompletedEvent), typeof(QuestCompletedEvent) }
         };
 
         public static Type GetTypeByName(string typeName)

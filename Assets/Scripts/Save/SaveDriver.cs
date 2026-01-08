@@ -29,6 +29,8 @@ namespace MKGame.Save
             root.RngProvider.SetState(state.Rng);
             root.AiSystem.Initialize(state, root.CommandQueue, root.RngProvider.Ai);
             root.SimulationSystem.Initialize(state);
+            root.QuestSystem.Initialize(state, root.EventBus);
+            root.QuestSystem.EnsureDefaultQuests();
         }
 
         public string SaveToFile(string fileName = null)
