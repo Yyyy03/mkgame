@@ -27,6 +27,8 @@ namespace MKGame.Save
             root.WorldState = state;
             root.EventBus.SetEventState(state.Events);
             root.RngProvider.SetState(state.Rng);
+            root.AiSystem.Initialize(state, root.CommandQueue, root.RngProvider.Ai);
+            root.SimulationSystem.Initialize(state);
         }
 
         public string SaveToFile(string fileName = null)

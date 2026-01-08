@@ -25,6 +25,12 @@ namespace MKGame.Input
                 var command = _translator.Translate(intent);
                 MKGame.Core.GameRoot.Instance.CommandQueue.Enqueue(command);
             }
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.E))
+            {
+                var pickup = new PickupResourceCommand(PlayerId);
+                MKGame.Core.GameRoot.Instance.CommandQueue.Enqueue(pickup);
+            }
         }
     }
 }

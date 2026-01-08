@@ -46,6 +46,7 @@ namespace MKGame.Core
             SimulationSystem = new SimulationSystem();
 
             AiSystem.Initialize(WorldState, CommandQueue, RngProvider.Ai);
+            SimulationSystem.Initialize(WorldState);
             TickScheduler.Register(AiSystem);
             TickScheduler.Register(SimulationSystem);
         }

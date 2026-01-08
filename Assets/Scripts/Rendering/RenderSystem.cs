@@ -14,10 +14,13 @@ namespace MKGame.Rendering
         [Header("Entity Sprites (optional)")]
         public Sprite PlayerSprite;
         public Sprite NpcSprite;
+        [Header("Resource Sprites (optional)")]
+        public Sprite ResourceSprite;
 
         private WorldDiff _diff;
         private WorldState _state;
         private readonly Dictionary<EntityId, GameObject> _entityViews = new Dictionary<EntityId, GameObject>();
+        private readonly Dictionary<int, GameObject> _resourceViews = new Dictionary<int, GameObject>();
         private Grid _grid;
         private Tilemap _tilemap;
         private Tile[] _tilePalette;
@@ -30,10 +33,12 @@ namespace MKGame.Rendering
             var root = MKGame.Core.GameRoot.Instance;
             _diff = root.WorldDiff;
             _state = root.WorldState;
+            root.EventBus.Subscribe<MKGame.Events.ResourcePickedEvent>(OnResourcePicked);
         }
 
         private void LateUpdate()
         {
+            SyncStateIfChanged();
             if (!_initialized)
             {
                 TryInitialize();
@@ -83,6 +88,7 @@ namespace MKGame.Rendering
 
             RenderFullMap();
             RenderAllEntities();
+            RenderAllResources();
 
             _initialized = true;
         }
@@ -142,6 +148,23 @@ namespace MKGame.Rendering
             }
         }
 
+        private void RenderAllResources()
+        {
+            _resourceViews.Clear();
+            var sprite = ResourceSprite != null ? ResourceSprite : CreateSprite(new Color(0.8f, 0.8f, 0.2f));
+            var list = _state.Map.Resources;
+            for (var i = 0; i < list.Count; i++)
+            {
+                var node = list[i];
+                var go = new GameObject("Resource_" + node.Id);
+                var renderer = go.AddComponent<SpriteRenderer>();
+                renderer.sprite = sprite;
+                renderer.sortingOrder = 5;
+                go.transform.position = new Vector3(node.Position.x, node.Position.y, -0.5f);
+                _resourceViews[node.Id] = go;
+            }
+        }
+
         private void CreateOrUpdateEntity(EntityId id, EntityData data)
         {
             if (!_entityViews.TryGetValue(id, out var go) || go == null)
@@ -158,6 +181,32 @@ namespace MKGame.Rendering
             sr.sprite = isPlayer ? PlayerSprite : NpcSprite;
             sr.color = Color.white;
             go.transform.position = new Vector3(data.Position.x, data.Position.y, -1f);
+        }
+
+        private void OnResourcePicked(MKGame.Events.ResourcePickedEvent evt)
+        {
+            if (_resourceViews.TryGetValue(evt.ResourceId, out var go) && go != null)
+            {
+                Destroy(go);
+                _resourceViews.Remove(evt.ResourceId);
+            }
+        }
+
+        private void SyncStateIfChanged()
+        {
+            var rootState = MKGame.Core.GameRoot.Instance.WorldState;
+            if (!ReferenceEquals(_state, rootState))
+            {
+                _state = rootState;
+                _initialized = false;
+                if (_grid != null)
+                {
+                    Destroy(_grid.gameObject);
+                }
+
+                _entityViews.Clear();
+                _resourceViews.Clear();
+            }
         }
 
         private Tile GetTileForIndex(int index)

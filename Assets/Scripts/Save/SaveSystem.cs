@@ -37,7 +37,8 @@ namespace MKGame.Save
                 Width = state.Map.Width,
                 Height = state.Map.Height,
                 Tiles = new TileDto[state.Map.Tiles != null ? state.Map.Tiles.Length : 0],
-                Biomes = new BiomeDto[state.Map.Biomes != null ? state.Map.Biomes.Length : 0]
+                Biomes = new BiomeDto[state.Map.Biomes != null ? state.Map.Biomes.Length : 0],
+                Resources = new ResourceDto[state.Map.Resources != null ? state.Map.Resources.Count : 0]
             };
 
             if (state.Map.Tiles != null)
@@ -59,6 +60,22 @@ namespace MKGame.Save
                     map.Biomes[i] = new BiomeDto
                     {
                         BiomeType = state.Map.Biomes[i].BiomeType
+                    };
+                }
+            }
+
+            if (state.Map.Resources != null)
+            {
+                for (var i = 0; i < state.Map.Resources.Count; i++)
+                {
+                    var res = state.Map.Resources[i];
+                    map.Resources[i] = new ResourceDto
+                    {
+                        Id = res.Id,
+                        Type = res.Type,
+                        Amount = res.Amount,
+                        X = res.Position.x,
+                        Y = res.Position.y
                     };
                 }
             }
@@ -143,6 +160,21 @@ namespace MKGame.Save
                     {
                         BiomeType = dto.Map.Biomes[i].BiomeType
                     };
+                }
+            }
+
+            if (dto.Map.Resources != null)
+            {
+                for (var i = 0; i < dto.Map.Resources.Length; i++)
+                {
+                    var res = dto.Map.Resources[i];
+                    state.Map.Resources.Add(new ResourceNode
+                    {
+                        Id = res.Id,
+                        Type = res.Type,
+                        Amount = res.Amount,
+                        Position = new UnityEngine.Vector2Int(res.X, res.Y)
+                    });
                 }
             }
 

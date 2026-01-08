@@ -20,6 +20,7 @@ namespace MKGame.Save
         public int Height;
         public TileDto[] Tiles;
         public BiomeDto[] Biomes;
+        public ResourceDto[] Resources;
     }
 
     public sealed class EntityStateDto
@@ -58,5 +59,14 @@ namespace MKGame.Save
     public struct BiomeDto
     {
         public int BiomeType;
+    }
+
+    public struct ResourceDto
+    {
+        public int Id;
+        public int Type;
+        public int Amount;
+        public int X;
+        public int Y;
     }
 }

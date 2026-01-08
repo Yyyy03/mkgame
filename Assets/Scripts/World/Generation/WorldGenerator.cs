@@ -35,6 +35,21 @@ namespace MKGame.World.Generation
                 Faction = 0
             };
 
+            state.Map.Resources.Clear();
+            var resourceCount = Mathf.Max(5, (width * height) / 64);
+            for (var i = 0; i < resourceCount; i++)
+            {
+                var id = i + 1;
+                var pos = new Vector2Int(rng.NextInt(0, width), rng.NextInt(0, height));
+                state.Map.Resources.Add(new ResourceNode
+                {
+                    Id = id,
+                    Type = rng.NextInt(0, 2),
+                    Amount = rng.NextInt(1, 4),
+                    Position = pos
+                });
+            }
+
             for (var i = 0; i < npcCount; i++)
             {
                 var id = new EntityId(2 + i);
