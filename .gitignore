@@ -1,0 +1,23 @@
+# Unity generated
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+MemoryCaptures/
+
+# User-specific
+UserSettings/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Rider / VS / VSCode
+.idea/
+.vs/
+.vscode/
+
